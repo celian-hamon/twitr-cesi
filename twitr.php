@@ -50,7 +50,7 @@ for ($i = 0; $i < count($tweetsResult); $i++) {
         "date" => $tweetsResult[$i]['date'],
         "retweets" => count($retweets),
         "likes" => count($likes),
-
+        "author" => $tweetsResult[$i]['author'],
         "is_deleted" => false,
     ];
 }
@@ -226,7 +226,7 @@ function isValidTweet($tweet): bool
             font-weight: bold;
         }
 
-        #userId {
+        .hidden {
             display: none;
         }
 
@@ -251,7 +251,7 @@ function isValidTweet($tweet): bool
             <div class='row'>
                 <?php echo "<img src='" . $userSession[0]["avatar"] . "' alt=''>"; ?>
                 <form action="post_twit.php" method="post" id="draft">
-                    <input type="number" id="userId" autocomplete="off" name="author" placeholder="1" value="<?php echo $userId ?>">
+                    <input type="number" class="hidden" autocomplete="off" name="author" placeholder="1" value="<?php echo $userId ?>">
                     <input type="text" autocomplete="off" name="message" placeholder="">
                     <button type="submit">Tweet</button>
                 </form>
@@ -285,7 +285,16 @@ function isValidTweet($tweet): bool
                         <p class="chars">
                             <?php echo strlen($tweet['message']) ?>
                         </p>
+                        <?php if ($tweet['author'] == $userId) : ?>
+                            <p>
+                            <form action="delete_twit.php" method="post">
+                                <input class="hidden" type="number" name="tweetId" value="<?php echo $tweet['id'] ?>">
+                                <button type="submit"><span class="material-icons">delete</span></button>
+                            </form>
+                            </p>
+                        <?php endif; ?>
                     </div>
+
                 </div>
             <?php endif; ?>
         <?php endforeach; ?>
